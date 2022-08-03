@@ -1,49 +1,38 @@
 import { useEffect, useState } from 'react';
+import useInput from '../hooks/use-input';
 
 const SimpleInput = (props) => {
-  const [enteredName, setEnteredName] = useState('');
-  const [enteredEmail, setEnteredEmail] = useState('');
+  //===============
+  const {
+    value: enteredName,
+    isValid: enteredNameIsValid,
+    hasError: nameInputIsInvalid,
+    valueInputChangeHandler: nameInputChangeHandler,
+    valueInputBlurHandler: nameInputBlurHandler,
+    reset: resetNameInput,
+  } = useInput((value) => value.trim() !== '');
 
-  // const [enteredNameIsValid, setEnteredNameIsValid] = useState(false);
-  const [enteredNameIsTouched, setEnteredNameTouched] = useState(false);
-  const [enteredEmailIsTouched, setEnteredEmailTouched] = useState(false);
-
-  const enteredNameIsValid = enteredName.trim() !== '';
-  const enteredEmailIsValid = enteredEmail.includes('@');
-
-  const nameInputIsInvalid = !enteredNameIsValid && enteredNameIsTouched;
-  const emailInputIsInvalid = !enteredEmailIsValid && enteredEmailIsTouched;
+  const {
+    value: enteredEmail,
+    isValid: enteredEmailIsValid,
+    hasError: emailInputIsInvalid,
+    valueInputChangeHandler: emailInputChangeHandler,
+    valueInputBlurHandler: emailInputBlurHandler,
+    reset: resetEmailInput,
+  } = useInput((value) => value.includes('@'));
+  //===============
 
   const formIsValid = enteredNameIsValid && enteredEmailIsValid;
 
-  const nameInputChangeHandler = (e) => {
-    setEnteredName(e.target.value);
-  };
-
-  const nameInputBlurHandler = () => {
-    setEnteredNameTouched(true);
-  };
-
   const formSubmissionHandler = (e) => {
     e.preventDefault();
-    // setEnteredNameTouched(true);
-    if (!enteredNameIsValid) {
+
+    if (!formIsValid) {
       return;
     }
 
-    setEnteredName('');
-    setEnteredNameTouched(false);
-
-    setEnteredEmail('');
-    setEnteredEmailTouched(false);
-  };
-
-  const emailInputChangeHandler = (e) => {
-    setEnteredEmail(e.target.value);
-  };
-
-  const emailInputBlurHandler = () => {
-    setEnteredEmailTouched(true);
+    resetNameInput();
+    resetEmailInput();
   };
 
   const nameInputClasses = nameInputIsInvalid
